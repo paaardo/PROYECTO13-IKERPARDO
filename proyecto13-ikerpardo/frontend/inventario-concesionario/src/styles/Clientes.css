@@ -1,0 +1,49 @@
+/* Contenedor principal para Clientes */
+.clientes-container {
+    padding: var(--spacing-lg);
+}
+
+.clientes-container h1 {
+    color: var(--color-primario);
+    text-align: center;
+}
+
+/* Estilos para el filtro en Clientes */
+.clientes-filtro {
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.clientes-filtro input {
+    padding: var(--spacing-sm);
+    font-size: 1rem;
+    border: 1px solid var(--color-secundario);
+    border-radius: 4px;
+}
+
+/* Tabla de Clientes */
+.clientes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+}
+
+.clientes-table thead {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.clientes-table th,
+.clientes-table td {
+    text-align: left;
+    padding: var(--spacing-sm);
+    border: 1px solid #ddd;
+}
+
+.clientes-table tbody tr:nth-child(even) {
+    background-color: var(--color-fondo);
+}
+
+.clientes-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
