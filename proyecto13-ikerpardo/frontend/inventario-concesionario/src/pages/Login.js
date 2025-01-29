@@ -10,11 +10,20 @@ const Login = () => {
     const [nombre, setNombre] = useState('');
     const [rol, setRol] = useState('usuario');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [verifyPassword, setVerifyPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setPasswordError('');
+
+        if (!isLoginMode && password !== verifyPassword) {
+            setPasswordError('Las contraseñas no coinciden');
+            return;
+        }
 
         try {
             if (isLoginMode) {
@@ -32,19 +41,33 @@ const Login = () => {
                     password,
                     rol,
                 });
-                alert('Usuario registrado con éxito. Por favor, inicia sesión.');
-                setIsLoginMode(true);
+                setSuccess('Usuario registrado correctamente');
+                setTimeout(() => {
+                    setSuccess('');
+                    setIsLoginMode(true);
+                    setPassword('');
+                    setVerifyPassword('');
+                }, 2000);
             }
         } catch (err) {
             setError(err.response?.data?.msg || 'Error al procesar la solicitud.');
         }
     };
 
+    // Redirección automática si ya está logeado
+    React.useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token && isLoginMode) {
+            navigate('/vehiculos');
+        }
+    }, [isLoginMode, navigate]);
+
     return (
         <div className="login-container">
             <form className="login-form" onSubmit={handleSubmit}>
                 <h1>{isLoginMode ? 'Iniciar Sesión' : 'Registrar Usuario'}</h1>
-                {error && <p className="error">{error}</p>}
+                {error && <p className="error center-text">{error}</p>}
+                {success && <p className="success center-text">{success}</p>}
                 {!isLoginMode && (
                     <>
                         <label htmlFor="nombre">Nombre</label>
@@ -81,10 +104,32 @@ const Login = () => {
                     placeholder="Introduce tu contraseña"
                     required
                 />
+                {!isLoginMode && (
+                    <>
+                        <label htmlFor="verifyPassword">Verificar Contraseña</label>
+                        <input
+                            type="password"
+                            id="verifyPassword"
+                            value={verifyPassword}
+                            onChange={(e) => setVerifyPassword(e.target.value)}
+                            placeholder="Repite tu contraseña"
+                            required
+                        />
+                        {passwordError && <p className="error center-text">{passwordError}</p>}
+                    </>
+                )}
                 <button type="submit">{isLoginMode ? 'Ingresar' : 'Registrar'}</button>
                 <button
                     type="button"
-                    onClick={() => setIsLoginMode(!isLoginMode)}
+                    onClick={() => {setIsLoginMode(!isLoginMode);
+                        setEmail('');
+                        setPassword('');
+                        setNombre('');
+                        setRol('usuario');
+                        setVerifyPassword('');
+                        setError('');
+                        setPasswordError('');
+                    }}
                     className="toggle-mode-button"
                 >
                     {isLoginMode ? 'Crear cuenta nueva' : 'Ya tengo una cuenta'}

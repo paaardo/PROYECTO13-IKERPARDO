@@ -91,14 +91,16 @@ const Vehiculos = () => {
 
   if (loading) return <p>Cargando vehículos...</p>;
   if (error) return <p>{error}</p>;
-
+  const rol = localStorage.getItem("rol") || "";
   return (
     <div className="vehiculos-container">
       <div className="vehiculos-header">
         <h1>Lista de Vehículos</h1>
-        <button className="btn-agregar" onClick={handleAgregar}>
-          Agregar Vehículo
-        </button>
+        {rol === "admin" && (
+          <button className="btn-agregar" onClick={handleAgregar}>
+            Agregar Vehículo
+          </button>
+        )}
         <br></br>
         {mensajeConfirmacion && (
           <div className="mensaje-confirmacion">{mensajeConfirmacion}</div>
@@ -220,20 +222,24 @@ const Vehiculos = () => {
                 <strong>Fecha Adquisición:</strong>{" "}
                 {new Date(vehiculo.fechaAdquisicion).toLocaleDateString()}
               </p>
-              <div className="acciones">
-                <button
-                  className="btn-editar"
-                  onClick={() => handleEditar(vehiculo)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn-eliminar"
-                  onClick={() => handleEliminar(vehiculo._id)}
-                >
-                  {botonConfirmacion === vehiculo._id ? "¿Seguro?" : "Eliminar"}
-                </button>
-              </div>
+              {rol === "admin" && (
+                <div className="acciones">
+                  <button
+                    className="btn-editar"
+                    onClick={() => handleEditar(vehiculo)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn-eliminar"
+                    onClick={() => handleEliminar(vehiculo._id)}
+                  >
+                    {botonConfirmacion === vehiculo._id
+                      ? "¿Seguro?"
+                      : "Eliminar"}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}
