@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useVehiculos from "../hooks/useVehiculos";
+import useTransacciones from "../hooks/useTransacciones"; // Importamos el hook
 import "../styles/FormularioTransaccion.css";
 
-const FormularioTransaccion = ({ onClose }) => {
+const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
   const { vehiculos, loading: loadingVehiculos, error: errorVehiculos } = useVehiculos();
+  const {agregarTransaccion } = useTransacciones(); // Importamos las funciones necesarias
   const [clientes, setClientes] = useState([]);
   const [loadingClientes, setLoadingClientes] = useState(true);
   const [errorClientes, setErrorClientes] = useState(null);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
   const [vehiculoSeleccionado, setVehiculoSeleccionado] = useState(null);
-  const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]); // Fecha actual por defecto
+  const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [total, setTotal] = useState("");
   const [mensaje, setMensaje] = useState(null);
 
@@ -45,7 +47,7 @@ const FormularioTransaccion = ({ onClose }) => {
   const limpiarFormulario = () => {
     setClienteSeleccionado(null);
     setVehiculoSeleccionado(null);
-    setFecha(new Date().toISOString().split("T")[0]); // Reinicia la fecha al día actual
+    setFecha(new Date().toISOString().split("T")[0]);
     setTotal("");
   };
 
@@ -58,19 +60,19 @@ const FormularioTransaccion = ({ onClose }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:5000/api/transacciones",
+      await agregarTransaccion(
         {
           cliente: clienteSeleccionado._id,
           vehiculo: vehiculoSeleccionado._id,
           fecha,
           total,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        token
       );
 
-      mostrarMensaje("Transacción agregada correctamente", "exito");
+      onTransaccionAgregada(); // Llamamos la función para actualizar la lista y mostrar el mensaje
       limpiarFormulario();
+      onClose(); // Cerrar el formulario automáticamente
     } catch (err) {
       mostrarMensaje("Error al agregar la transacción", "error");
     }
@@ -78,14 +80,13 @@ const FormularioTransaccion = ({ onClose }) => {
 
   const mostrarMensaje = (texto, tipo) => {
     setMensaje({ texto, tipo });
-    setTimeout(() => setMensaje(null), 3000); // Oculta el mensaje después de 3 segundos
+    setTimeout(() => setMensaje(null), 3000);
   };
 
   const handleFechaChange = (e) => {
     const fechaIngresada = e.target.value;
     const fechaActual = new Date().toISOString().split("T")[0];
 
-    // Si la fecha ingresada es anterior a hoy, la ajusta automáticamente
     if (fechaIngresada < fechaActual) {
       setFecha(fechaActual);
     } else {
@@ -96,12 +97,9 @@ const FormularioTransaccion = ({ onClose }) => {
   return (
     <div className="formulario-transaccion">
       <h2>Agregar Nueva Transacción</h2>
-
-      {/* Mensaje de éxito o error */}
       {mensaje && <div className={`mensaje-transaccion ${mensaje.tipo}`}>{mensaje.texto}</div>}
 
       <div className="formulario-contenido-transaccion">
-        {/* Tabla de Clientes */}
         <div className="clientes-lista-transaccion">
           <h3>Seleccionar Cliente</h3>
           {loadingClientes ? (
@@ -132,7 +130,6 @@ const FormularioTransaccion = ({ onClose }) => {
           )}
         </div>
 
-        {/* Lista de Vehículos */}
         <div className="vehiculos-lista-transaccion">
           <h3>Seleccionar Vehículo</h3>
           {loadingVehiculos ? (
@@ -160,7 +157,6 @@ const FormularioTransaccion = ({ onClose }) => {
 
       <br />
 
-      {/* Campos de Fecha y Total */}
       <div className="formulario-datos-transaccion">
         <label>Fecha de Transacción:</label>
         <input type="date" value={fecha} onChange={handleFechaChange} />
@@ -168,7 +164,6 @@ const FormularioTransaccion = ({ onClose }) => {
         <label>Monto Total:</label>
         <input type="number" value={total} onChange={(e) => setTotal(e.target.value)} min="0" step="0.01" />
 
-        {/* Botones */}
         <div className="botones-transaccion">
           <button onClick={handleSubmit} className="btn-guardar-transaccion">Agregar</button>
           <button onClick={limpiarFormulario} className="btn-limpiar-transaccion">Limpiar</button>
