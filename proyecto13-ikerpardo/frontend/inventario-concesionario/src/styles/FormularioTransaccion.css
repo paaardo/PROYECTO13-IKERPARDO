@@ -1,0 +1,171 @@
+/* Contenedor principal del formulario */
+.formulario-transaccion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+
+/* Contenedor que organiza los clientes, el formulario central y los vehículos */
+.formulario-contenido-transaccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    gap: 20px;
+}
+
+/* Sección de clientes */
+.clientes-lista-transaccion {
+    flex: 1;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background: white;
+}
+
+/* Tabla de clientes */
+.clientes-tabla-transaccion {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.clientes-tabla-transaccion th, 
+.clientes-tabla-transaccion td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    cursor: pointer;
+}
+
+.clientes-tabla-transaccion tr:hover {
+    background: #e6f7ff;
+}
+
+/* Sección de vehículos */
+.vehiculos-lista-transaccion {
+    flex: 1;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background: white;
+}
+
+/* Estilo de cada vehículo */
+.lista-vehiculos-transaccion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vehiculo-card-transaccion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.vehiculo-card-transaccion:hover {
+    background: #e6f7ff;
+}
+
+/* Imágenes de los vehículos */
+.vehiculo-card-transaccion img {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Formulario central */
+.formulario-datos-transaccion {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-width: 250px;
+}
+
+/* Inputs del formulario */
+.formulario-datos-transaccion input {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Contenedor de los botones */
+.botones-transaccion {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilos de los botones */
+.botones-transaccion button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-limpiar-transaccion {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-limpiar-transaccion:hover {
+    background-color: #a71d2a;
+}
+
+.btn-guardar-transaccion {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-guardar-transaccion:hover {
+    background-color: #1e7d32;
+}
+
+/* Mensajes de éxito o error */
+.mensaje-transaccion {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.mensaje-transaccion.exito {
+    background-color: #28a745;
+    color: white;
+}
+
+.mensaje-transaccion.error {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Destacar selección de cliente y vehículo */
+.seleccionado {
+    background-color: #a3d5ff !important;
+}
+
