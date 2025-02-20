@@ -139,7 +139,6 @@ form {
 
 /* Acciones */
 .acciones {
-  margin-top: var(--spacing-md);
   display: flex;
   gap: var(--spacing-sm);
   justify-content: flex-end;

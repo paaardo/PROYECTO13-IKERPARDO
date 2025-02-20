@@ -1,0 +1,104 @@
+/* Transacciones.css */
+
+.transacciones-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+}
+
+.btn-agregar {
+  display: block;
+  margin: 0 auto var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.mensaje-exito {
+  text-align: center;
+  color: green;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.filtros-container-transacciones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+}
+
+.filtros-container-transacciones input,
+.filtros-container-transacciones select {
+  font-size: 14px;
+  border: 1px solid var(--color-secundario);
+  border-radius: 4px;
+  height: 60px;
+}
+
+.filtros-container-transacciones input[type="date"] {
+  width: 120px;
+}
+
+.filtro-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-texto);
+}
+
+.filtro-fecha label {
+  margin-bottom: 4px;
+}
+
+.filtro-fecha input {
+  width: 150px;
+  text-align: center;
+}
+
+.transacciones-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.transacciones-tabla th,
+.transacciones-tabla td {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.transacciones-tabla th {
+  background-color: var(--color-fondo);
+}
+
+.transacciones-tabla tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.transacciones-tabla tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.acciones {
+  justify-content: center;
+}

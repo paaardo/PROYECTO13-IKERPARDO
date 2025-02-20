@@ -4,9 +4,17 @@ import useVehiculos from "../hooks/useVehiculos";
 import useTransacciones from "../hooks/useTransacciones"; // Importamos el hook
 import "../styles/FormularioTransaccion.css";
 
-const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
-  const { vehiculos, loading: loadingVehiculos, error: errorVehiculos } = useVehiculos();
-  const {agregarTransaccion } = useTransacciones(); // Importamos las funciones necesarias
+const FormularioTransaccion = ({
+  onClose,
+  onTransaccionAgregada,
+  transaccion,
+}) => {
+  const {
+    vehiculos,
+    loading: loadingVehiculos,
+    error: errorVehiculos,
+  } = useVehiculos();
+  const { agregarTransaccion } = useTransacciones();
   const [clientes, setClientes] = useState([]);
   const [loadingClientes, setLoadingClientes] = useState(true);
   const [errorClientes, setErrorClientes] = useState(null);
@@ -14,7 +22,6 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
   const [vehiculoSeleccionado, setVehiculoSeleccionado] = useState(null);
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [total, setTotal] = useState("");
-  const [mensaje, setMensaje] = useState(null);
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -33,6 +40,24 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
 
     fetchClientes();
   }, []);
+
+  useEffect(() => {
+    if (transaccion) {
+      setClienteSeleccionado(transaccion.cliente);
+      setVehiculoSeleccionado(transaccion.vehiculo);
+      setFecha(
+        transaccion.fecha
+          ? transaccion.fecha.split("T")[0]
+          : new Date().toISOString().split("T")[0]
+      );
+      setTotal(transaccion.total);
+    } else {
+      setClienteSeleccionado(null);
+      setVehiculoSeleccionado(null);
+      setFecha(new Date().toISOString().split("T")[0]);
+      setTotal("");
+    }
+  }, [transaccion]);
 
   const seleccionarCliente = (cliente) => {
     setClienteSeleccionado(cliente);
@@ -54,33 +79,43 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!clienteSeleccionado || !vehiculoSeleccionado || !fecha || !total) {
-      mostrarMensaje("Todos los campos son obligatorios.", "error");
+      onClose("Todos los campos son obligatorios.");
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
-      await agregarTransaccion(
-        {
-          cliente: clienteSeleccionado._id,
-          vehiculo: vehiculoSeleccionado._id,
-          fecha,
-          total,
-        },
-        token
-      );
 
-      onTransaccionAgregada(); // Llamamos la función para actualizar la lista y mostrar el mensaje
+      if (transaccion) {
+        await axios.put(
+          `http://localhost:5000/api/transacciones/${transaccion._id}`,
+          {
+            cliente: clienteSeleccionado._id,
+            vehiculo: vehiculoSeleccionado._id,
+            fecha,
+            total,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        onClose("Transacción editada exitosamente.");
+      } else {
+        await agregarTransaccion(
+          {
+            cliente: clienteSeleccionado._id,
+            vehiculo: vehiculoSeleccionado._id,
+            fecha,
+            total,
+          },
+          token
+        );
+        onClose("Transacción agregada exitosamente.");
+      }
+
+      onTransaccionAgregada();
       limpiarFormulario();
-      onClose(); // Cerrar el formulario automáticamente
     } catch (err) {
-      mostrarMensaje("Error al agregar la transacción", "error");
+      onClose("Error al guardar la transacción.");
     }
-  };
-
-  const mostrarMensaje = (texto, tipo) => {
-    setMensaje({ texto, tipo });
-    setTimeout(() => setMensaje(null), 3000);
   };
 
   const handleFechaChange = (e) => {
@@ -96,8 +131,7 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
 
   return (
     <div className="formulario-transaccion">
-      <h2>Agregar Nueva Transacción</h2>
-      {mensaje && <div className={`mensaje-transaccion ${mensaje.tipo}`}>{mensaje.texto}</div>}
+      <h2>{transaccion ? "Editar Transacción" : "Agregar Nueva Transacción"}</h2>
 
       <div className="formulario-contenido-transaccion">
         <div className="clientes-lista-transaccion">
@@ -141,13 +175,23 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
               {vehiculos.map((vehiculo) => (
                 <div
                   key={vehiculo._id}
-                  className={`vehiculo-card-transaccion ${vehiculoSeleccionado?._id === vehiculo._id ? "seleccionado" : ""}`}
+                  className={`vehiculo-card-transaccion ${
+                    vehiculoSeleccionado?._id === vehiculo._id ? "seleccionado" : ""
+                  }`}
                   onClick={() => seleccionarVehiculo(vehiculo)}
-                  style={vehiculo.estadoVehiculo === "Vendido" ? { opacity: 0.5, pointerEvents: "none" } : {}}
+                  style={
+                    vehiculo.estadoVehiculo === "Vendido"
+                      ? { opacity: 0.5, pointerEvents: "none" }
+                      : {}
+                  }
                 >
                   <img src={vehiculo.imagen} alt={`${vehiculo.marca} ${vehiculo.modelo}`} />
-                  <p>{vehiculo.marca} {vehiculo.modelo} ({vehiculo.ano})</p>
-                  <p><strong>Estado:</strong> {vehiculo.estadoVehiculo}</p>
+                  <p>
+                    {vehiculo.marca} {vehiculo.modelo} ({vehiculo.ano})
+                  </p>
+                  <p>
+                    <strong>Estado:</strong> {vehiculo.estadoVehiculo}
+                  </p>
                 </div>
               ))}
             </div>
@@ -162,12 +206,24 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
         <input type="date" value={fecha} onChange={handleFechaChange} />
 
         <label>Monto Total:</label>
-        <input type="number" value={total} onChange={(e) => setTotal(e.target.value)} min="0" step="0.01" />
+        <input
+          type="number"
+          value={total}
+          onChange={(e) => setTotal(e.target.value)}
+          min="0"
+          step="0.01"
+        />
 
         <div className="botones-transaccion">
-          <button onClick={handleSubmit} className="btn-guardar-transaccion">Agregar</button>
-          <button onClick={limpiarFormulario} className="btn-limpiar-transaccion">Limpiar</button>
-          <button onClick={onClose} className="btn-cancelar-transaccion">Cancelar</button>
+          <button onClick={handleSubmit} className="btn-guardar-transaccion">
+            {transaccion ? "Guardar Cambios" : "Agregar"}
+          </button>
+          <button onClick={limpiarFormulario} className="btn-limpiar-transaccion">
+            Limpiar
+          </button>
+          <button onClick={() => onClose(null)} className="btn-cancelar-transaccion">
+            Cancelar
+          </button>
         </div>
       </div>
     </div>
@@ -175,3 +231,4 @@ const FormularioTransaccion = ({ onClose, onTransaccionAgregada }) => {
 };
 
 export default FormularioTransaccion;
+

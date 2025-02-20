@@ -59,13 +59,32 @@ exports.obtenerTransaccionPorId = async (req, res) => {
 // Actualizar una transacción
 exports.actualizarTransaccion = async (req, res) => {
   try {
+    const transaccionAnterior = await Transaccion.findById(req.params.id);
+
+    if (!transaccionAnterior) {
+      return res.status(404).json({ mensaje: "Transacción no encontrada" });
+    }
+
+    // Si el vehículo ha cambiado, restauramos el estado del vehículo anterior
+    if (transaccionAnterior.vehiculo.toString() !== req.body.vehiculo) {
+      // Restaurar el estado del vehículo anterior
+      await Vehiculo.findByIdAndUpdate(transaccionAnterior.vehiculo, {
+        estadoVehiculo: "Disponible",
+      });
+
+      // Actualizar el estado del nuevo vehículo a "Vendido"
+      await Vehiculo.findByIdAndUpdate(req.body.vehiculo, {
+        estadoVehiculo: "Vendido",
+      });
+    }
+
+    // Actualizar la transacción con los nuevos datos
     const transaccionActualizada = await Transaccion.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-    if (!transaccionActualizada)
-      return res.status(404).json({ mensaje: "Transacción no encontrada" });
+
     res.json(transaccionActualizada);
   } catch (error) {
     res
@@ -78,24 +97,25 @@ exports.actualizarTransaccion = async (req, res) => {
 exports.eliminarTransaccion = async (req, res) => {
   try {
     // Buscar la transacción que se va a eliminar
-    const transaccionEliminada = await Transaccion.findByIdAndDelete(
-      req.params.id
-    );
+    const transaccionEliminada = await Transaccion.findById(req.params.id);
     if (!transaccionEliminada)
       return res.status(404).json({ mensaje: "Transacción no encontrada" });
 
     // 1. Eliminar la transacción del campo "compras" del cliente
-    await Cliente.findByIdAndUpdate(
-      transaccionEliminada.cliente,
-      { $pull: { compras: transaccionEliminada._id } },
+    await Cliente.findByIdAndUpdate(transaccionEliminada.cliente, {
+      $pull: { compras: transaccionEliminada._id },
+    });
+
+    // 2. Cambiar el estado del vehículo a "Disponible"
+    await Vehiculo.findByIdAndUpdate(
+      transaccionEliminada.vehiculo,
+      { estadoVehiculo: "Disponible" }, // Asegurar que usamos el mismo campo que en crearTransaccion
       { new: true }
     );
 
-    await Vehiculo.findByIdAndUpdate(
-      req.body.vehiculo,
-      { estadoVehiculo: "Disponible" },
-      { new: true }
-    );
+    // 3. Finalmente, eliminar la transacción de la base de datos
+    await Transaccion.findByIdAndDelete(req.params.id);
+
     res.json({ mensaje: "Transacción eliminada correctamente" });
   } catch (error) {
     res
