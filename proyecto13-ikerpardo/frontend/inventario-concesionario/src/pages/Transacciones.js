@@ -107,25 +107,6 @@ const Transacciones = () => {
           value={filtroNombre}
           onChange={(e) => setFiltroNombre(e.target.value)}
         />
-        <div className="filtro-fecha">
-          <label htmlFor="fechaInicio">Fecha Mínima:</label>
-          <input
-            type="date"
-            id="fechaInicio"
-            value={filtroFechaInicio}
-            onChange={(e) => setFiltroFechaInicio(e.target.value)}
-          />
-        </div>
-
-        <div className="filtro-fecha">
-          <label htmlFor="fechaFin">Fecha Máxima:</label>
-          <input
-            type="date"
-            id="fechaFin"
-            value={filtroFechaFin}
-            onChange={(e) => setFiltroFechaFin(e.target.value)}
-          />
-        </div>
         <select
           className="filtro-select"
           value={filtroEstado}
@@ -135,6 +116,22 @@ const Transacciones = () => {
           <option value="Nuevo">Nuevo</option>
           <option value="Usado">Usado</option>
         </select>
+        <div className="filtro-fecha">
+          <label htmlFor="fechaInicio">Fecha Mínima:</label>
+          <input
+            type="date"
+            id="fechaInicio"
+            value={filtroFechaInicio}
+            onChange={(e) => setFiltroFechaInicio(e.target.value)}
+          />
+          <label htmlFor="fechaFin">Fecha Máxima:</label>
+          <input
+            type="date"
+            id="fechaFin"
+            value={filtroFechaFin}
+            onChange={(e) => setFiltroFechaFin(e.target.value)}
+          />
+        </div>
         <div className="filtro-precio">
           <label htmlFor="precioMinimo">
             Precio mínimo: ${precioMinimo.toLocaleString()}
