@@ -16,7 +16,7 @@ const Vehiculos = () => {
   const [estadoFiltro, setEstadoFiltro] = useState("");
   const [marcaFiltro, setMarcaFiltro] = useState("");
   const [precioMinimo, setPrecioMinimo] = useState(0);
-  const [precioMaximo, setPrecioMaximo] = useState(50000);
+  const [precioMaximo, setPrecioMaximo] = useState(100000);
   const [botonConfirmacion, setBotonConfirmacion] = useState(null);
   const [mensajeConfirmacion, setMensajeConfirmacion] = useState(""); // Estado para el mensaje
   const [formularioVisible, setFormularioVisible] = useState(false); // Mostrar/ocultar formulario
@@ -147,7 +147,7 @@ const Vehiculos = () => {
             type="range"
             id="precioMinimo"
             min="0"
-            max="50000"
+            max="100000"
             step="500"
             value={precioMinimo}
             onChange={(e) => setPrecioMinimo(Number(e.target.value))}
@@ -160,7 +160,7 @@ const Vehiculos = () => {
             type="range"
             id="precioMaximo"
             min="0"
-            max="50000"
+            max="100000"
             step="500"
             value={precioMaximo}
             onChange={(e) => setPrecioMaximo(Number(e.target.value))}

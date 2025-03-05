@@ -33,7 +33,7 @@ const Login = () => {
                 });
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('rol', response.data.rol);
-                navigate('/vehiculos');
+                navigate('/');
             } else {
                 await axios.post('http://localhost:5000/api/auth/registrar', {
                     nombre,
@@ -58,7 +58,7 @@ const Login = () => {
     React.useEffect(() => {
         const token = localStorage.getItem('token');
         if (token && isLoginMode) {
-            navigate('/vehiculos');
+            navigate('/');
         }
     }, [isLoginMode, navigate]);
 
