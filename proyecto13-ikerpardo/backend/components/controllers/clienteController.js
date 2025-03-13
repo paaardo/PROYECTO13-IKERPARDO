@@ -15,7 +15,16 @@ exports.crearCliente = async (req, res) => {
 // Obtener todos los clientes
 exports.obtenerClientes = async (req, res) => {
     try {
-        const clientes = await Cliente.find();
+        let clientes;
+
+        if (req.accesoLimitado) {
+            // Solo devolver nombre, apellido y compras para "Usuario"
+            clientes = await Cliente.find().select("nombre apellido compras");
+        } else {
+            // Para "Admin" se devuelve toda la información
+            clientes = await Cliente.find();
+        }
+
         res.json(clientes);
     } catch (error) {
         res.status(500).json({ mensaje: "Error al obtener los clientes", error });

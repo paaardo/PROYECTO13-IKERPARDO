@@ -1,27 +1,96 @@
+/* Estilos generales */
 .inicio-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background: #f7f7f7;
 }
 
 .inicio-titulo {
+  font-size: 40px;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin-bottom: 50px;
+  letter-spacing: -1px;
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .inicio-resumen {
   display: flex;
-  gap: 20px;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
 }
 
+/* Estilo de las tarjetas */
 .inicio-card {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  width: 280px;
   text-align: center;
-  min-width: 200px;
-  flex: 1;
-  max-width: 250px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #eaeaea;
+}
+
+.inicio-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+}
+
+.inicio-card h3 {
+  font-size: 20px;
+  color: #444;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.inicio-card p {
+  font-size: 18px;
+  color: #666;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.inicio-card p strong {
+  color: #333;
+}
+
+/* Imágenes */
+.inicio-imagen {
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 50px;
+  border-radius: 12px;
+}
+
+.inicio-imagen img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  filter: brightness(85%);
+  transition: filter 0.3s ease;
+}
+
+.inicio-imagen img:hover {
+  filter: brightness(100%);
+}
+
+/* Adaptabilidad */
+@media (max-width: 768px) {
+  .inicio-resumen {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .inicio-card {
+    width: 100%;
+    max-width: 350px;
+    margin: 15px 0;
+  }
 }

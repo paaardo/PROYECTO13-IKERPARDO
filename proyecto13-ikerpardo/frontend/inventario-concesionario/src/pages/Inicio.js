@@ -24,13 +24,11 @@ const Inicio = () => {
 
       // Obtener vehículos
       const resVehiculos = await axios.get("http://localhost:5000/api/vehiculos", config);
-      console.log("🔹 Vehículos obtenidos:", resVehiculos.data);
 
       // Filtrar vehículos por estadoVehiculo === "Disponible"
       const vehiculosDisponibles = resVehiculos.data.filter(
         (v) => v.estadoVehiculo?.toLowerCase() === "disponible"
       );
-      console.log("✅ Vehículos disponibles:", vehiculosDisponibles);
       setTotalVehiculos(vehiculosDisponibles.length);
 
       // Obtener el vehículo más barato
@@ -38,7 +36,6 @@ const Inicio = () => {
         const masBarato = vehiculosDisponibles.reduce((prev, curr) => 
           Number(curr.precio) < Number(prev.precio) ? curr : prev
         );
-        console.log("🚗 Vehículo más barato:", masBarato);
         setVehiculoMasBarato(masBarato);
       } else {
         setVehiculoMasBarato(null);
@@ -46,15 +43,12 @@ const Inicio = () => {
 
       // Obtener transacciones
       const resTransacciones = await axios.get("http://localhost:5000/api/transacciones", config);
-      console.log("🔹 Transacciones obtenidas:", resTransacciones.data);
 
       // Calcular ingresos totales
       const ingresosTotales = resTransacciones.data.reduce((sum, t) => {
         const ingreso = Number(t.precio) || Number(t.total) || 0;
-        console.log(`💰 Transacción ${t._id}: Precio = ${t.precio}, Total = ${t.total}, Usado = ${ingreso}`);
         return sum + ingreso;
       }, 0);
-      console.log("✅ Total ingresos:", ingresosTotales);
       setTotalIngresos(ingresosTotales);
 
       // Obtener clientes
@@ -106,6 +100,11 @@ const Inicio = () => {
           <h3>Total de Ingresos por Ventas</h3>
           <p>{totalIngresos}€</p>
         </div>
+      </div>
+
+      {/* Sección de la imagen del concesionario */}
+      <div className="inicio-imagen">
+        <img src="/images/concesionario.jpg" alt="Concesionario" />
       </div>
     </div>
   );

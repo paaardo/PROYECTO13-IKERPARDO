@@ -2,9 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const transaccionController = require('../controllers/transaccionController');
+const { verificarToken, verificarRol } = require('../middleware/authMiddleware');
 
 // Ruta para crear una nueva transacción
-router.post('/', transaccionController.crearTransaccion);
+router.post('/', verificarToken, verificarRol('admin'), transaccionController.crearTransaccion);
 
 // Ruta para obtener todas las transacciones
 router.get('/', transaccionController.obtenerTransacciones);
@@ -13,9 +14,9 @@ router.get('/', transaccionController.obtenerTransacciones);
 router.get('/:id', transaccionController.obtenerTransaccionPorId);
 
 // Ruta para actualizar una transacción
-router.put('/:id', transaccionController.actualizarTransaccion);
+router.put('/:id', verificarToken, verificarRol('admin'), transaccionController.actualizarTransaccion);
 
 // Ruta para eliminar una transacción
-router.delete('/:id', transaccionController.eliminarTransaccion);
+router.delete('/:id', verificarToken, verificarRol('admin'), transaccionController.eliminarTransaccion);
 
 module.exports = router;

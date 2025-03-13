@@ -14,7 +14,7 @@
     margin: 0 var(--spacing-sm);
     font-size: 1rem;
     font-weight: bold;
-    transition: transform 0.2s, font-size 0.2s;
+    transition: transform 0.2s, font-size 0.5s;
     will-change: transform;
 }
 
@@ -42,6 +42,7 @@
     margin-left: var(--spacing-sm);
     text-decoration: none;
     transition: transform 0.2s;
+    will-change: transform;
 }
 
 .logout-button:hover {

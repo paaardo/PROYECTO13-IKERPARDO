@@ -20,7 +20,7 @@ app.use('/api/auth', authRoutes);
 
 // Rutas protegidas con autenticación y roles
 app.use('/api/vehiculos', verificarToken, vehiculoRoutes);
-app.use('/api/clientes', verificarToken, verificarRol('admin'), clienteRoutes);
+app.use('/api/clientes', verificarToken, clienteRoutes);
 app.use('/api/transacciones', verificarToken, transaccionRoutes);
 
 // Conexión a MongoDB

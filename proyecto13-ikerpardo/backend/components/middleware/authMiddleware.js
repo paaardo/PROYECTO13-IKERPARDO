@@ -15,10 +15,17 @@ exports.verificarToken = (req, res, next) => {
     }
 };
 
-// Verificar rol
+// Verificar rol con excepción para GET clientes
 exports.verificarRol = (rol) => (req, res, next) => {
-    if (req.usuario.rol !== rol) {
-        return res.status(403).json({ mensaje: 'No tienes permisos para esta acción' });
+    if (req.usuario.rol === "Usuario" && req.method === "GET" && req.originalUrl.startsWith("/api/clientes")) {
+        req.accesoLimitado = true; // Marcar acceso limitado
+        return next();
     }
+
+    if (req.usuario.rol !== rol) {
+        return res.status(403).json({ mensaje: "No tienes permisos para esta acción" });
+    }
+    
     next();
 };
+

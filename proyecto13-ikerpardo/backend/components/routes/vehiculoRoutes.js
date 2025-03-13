@@ -2,9 +2,10 @@
 const express = require('express');
 const router = express.Router();
 const vehiculoController = require('../controllers/vehiculoController');
+const { verificarToken, verificarRol } = require('../middleware/authMiddleware');
 
 // Ruta para crear un nuevo vehículo
-router.post('/', vehiculoController.crearVehiculo);
+router.post('/', verificarToken, verificarRol('admin'), vehiculoController.crearVehiculo);
 
 // Ruta para obtener todos los vehículos
 router.get('/', vehiculoController.obtenerVehiculos);
@@ -13,9 +14,9 @@ router.get('/', vehiculoController.obtenerVehiculos);
 router.get('/:id', vehiculoController.obtenerVehiculoPorId);
 
 // Ruta para actualizar un vehículo
-router.put('/:id', vehiculoController.actualizarVehiculo);
+router.put('/:id', verificarToken, verificarRol('admin'), vehiculoController.actualizarVehiculo);
 
 // Ruta para eliminar un vehículo
-router.delete('/:id', vehiculoController.eliminarVehiculo);
+router.delete('/:id', verificarToken, verificarRol('admin'), vehiculoController.eliminarVehiculo);
 
 module.exports = router;
