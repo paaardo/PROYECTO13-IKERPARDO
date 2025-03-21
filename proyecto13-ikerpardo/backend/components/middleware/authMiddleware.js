@@ -1,4 +1,3 @@
-// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
 // Verificar token
@@ -15,7 +14,7 @@ exports.verificarToken = (req, res, next) => {
     }
 };
 
-// Verificar rol con excepción para GET clientes
+// Verificar rol con excepcion para GET clientes
 exports.verificarRol = (rol) => (req, res, next) => {
     if (req.usuario.rol === "Usuario" && req.method === "GET" && req.originalUrl.startsWith("/api/clientes")) {
         req.accesoLimitado = true; // Marcar acceso limitado

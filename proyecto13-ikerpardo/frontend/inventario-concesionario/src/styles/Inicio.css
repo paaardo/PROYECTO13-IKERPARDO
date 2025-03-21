@@ -1,4 +1,3 @@
-/* Estilos generales */
 .inicio-container {
   display: flex;
   flex-direction: column;
@@ -24,17 +23,16 @@
   margin-bottom: 40px;
 }
 
-/* Estilo de las tarjetas */
 .inicio-card {
   background-color: #ffffff;
-  padding: 25px;
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  width: 280px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   border: 1px solid #eaeaea;
+  max-width: 280px;
+  width: 100%;
 }
 
 .inicio-card:hover {
@@ -60,7 +58,6 @@
   color: #333;
 }
 
-/* Imágenes */
 .inicio-imagen {
   width: 100%;
   max-width: 1000px;
@@ -81,7 +78,6 @@
   filter: brightness(100%);
 }
 
-/* Adaptabilidad */
 @media (max-width: 768px) {
   .inicio-resumen {
     flex-direction: column;

@@ -1,4 +1,3 @@
-// controllers/authController.js
 const Usuario = require('../models/Usuario');
 const jwt = require('jsonwebtoken');
 
@@ -14,7 +13,7 @@ exports.registrar = async (req, res) => {
     }
 };
 
-// Iniciar sesión
+// Iniciar sesion
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;

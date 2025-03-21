@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../styles/Clientes.css'; // Ruta del archivo de estilos
+import '../styles/Clientes.css';
 
 const Clientes = () => {
     const [clientes, setClientes] = useState([]);
@@ -11,13 +11,13 @@ const Clientes = () => {
     useEffect(() => {
         const fetchClientes = async () => {
             try {
-                const token = localStorage.getItem('token'); // Recuperar el token
+                const token = localStorage.getItem('token');
                 const response = await axios.get('http://localhost:5000/api/clientes', {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
+                        Authorization: `Bearer ${token}`,
                     },
                 });
-                setClientes(response.data); // Guardar los datos de clientes
+                setClientes(response.data);
                 setLoading(false);
             } catch (err) {
                 setError('Error al cargar los clientes');
@@ -28,7 +28,6 @@ const Clientes = () => {
         fetchClientes();
     }, []);
 
-    // Filtrar por nombre
     const clientesFiltrados = clientes.filter((cliente) => 
         cliente.nombre?.toLowerCase().includes(nombreFiltro.toLowerCase())
     );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useVehiculos from "../hooks/useVehiculos";
-import useTransacciones from "../hooks/useTransacciones"; // Importamos el hook
+import useTransacciones from "../hooks/useTransacciones";
 import "../styles/FormularioTransaccion.css";
 
 const FormularioTransaccion = ({

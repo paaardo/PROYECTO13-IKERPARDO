@@ -48,7 +48,7 @@ const useTransacciones = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      fetchTransacciones(); // Recargar lista
+      fetchTransacciones();
     } catch (err) {
       throw new Error("Error al editar la transacción");
     }
@@ -60,7 +60,7 @@ const useTransacciones = () => {
       await axios.delete(`http://localhost:5000/api/transacciones/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchTransacciones(); // Recargar lista
+      fetchTransacciones();
     } catch (err) {
       throw new Error("Error al eliminar la transacción");
     }

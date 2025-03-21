@@ -1,4 +1,3 @@
-// controllers/clienteController.js
 const Cliente = require('../models/Cliente');
 
 // Crear un nuevo cliente

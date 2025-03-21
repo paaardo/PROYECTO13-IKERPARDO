@@ -1,7 +1,6 @@
-// controllers/vehiculoController.js
 const Vehiculo = require('../models/Vehiculo');
 
-// Crear un nuevo vehículo
+// Crear un nuevo vehiculo
 exports.crearVehiculo = async (req, res) => {
     try {
         const nuevoVehiculo = new Vehiculo(req.body);
@@ -12,7 +11,7 @@ exports.crearVehiculo = async (req, res) => {
     }
 };
 
-// Obtener todos los vehículos
+// Obtener todos los vehiculos
 exports.obtenerVehiculos = async (req, res) => {
     try {
         const vehiculos = await Vehiculo.find();
@@ -22,7 +21,7 @@ exports.obtenerVehiculos = async (req, res) => {
     }
 };
 
-// Obtener un vehículo por ID
+// Obtener un vehiculo por ID
 exports.obtenerVehiculoPorId = async (req, res) => {
     try {
         const vehiculo = await Vehiculo.findById(req.params.id);
@@ -33,7 +32,7 @@ exports.obtenerVehiculoPorId = async (req, res) => {
     }
 };
 
-// Actualizar un vehículo
+// Actualizar un vehiculo
 exports.actualizarVehiculo = async (req, res) => {
     try {
         const vehiculoActualizado = await Vehiculo.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -44,7 +43,7 @@ exports.actualizarVehiculo = async (req, res) => {
     }
 };
 
-// Eliminar un vehículo
+// Eliminar un vehiculo
 exports.eliminarVehiculo = async (req, res) => {
     try {
         const vehiculoEliminado = await Vehiculo.findByIdAndDelete(req.params.id);

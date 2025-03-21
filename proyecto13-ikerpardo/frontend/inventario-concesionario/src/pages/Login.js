@@ -19,21 +19,24 @@ const Login = ({ loginUser }) => {
         e.preventDefault();
         setError('');
         setPasswordError('');
-
+    
         if (!isLoginMode && password !== verifyPassword) {
             setPasswordError('Las contraseñas no coinciden');
             return;
         }
-
+    
         try {
             if (isLoginMode) {
                 const response = await axios.post('http://localhost:5000/api/auth/login', {
                     email,
                     password,
                 });
-                // Llamamos a loginUser para actualizar el token en el estado y localStorage
-                loginUser(response.data.token);
-                navigate('/');  // Redirige a la página de inicio después de login exitoso
+    
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('rol', response.data.rol);
+    
+                loginUser(response.data.token, response.data.rol);
+                navigate('/');
             } else {
                 await axios.post('http://localhost:5000/api/auth/registrar', {
                     nombre,
@@ -53,11 +56,11 @@ const Login = ({ loginUser }) => {
             setError(err.response?.data?.msg || 'Error al procesar la solicitud.');
         }
     };
-
+    
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token && window.location.pathname !== '/') {
-            navigate('/'); // Redirige solo si no estamos en la página de inicio
+            navigate('/');
         }
     }, [navigate]);
 

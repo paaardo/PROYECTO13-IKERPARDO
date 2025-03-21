@@ -19,7 +19,6 @@ const AppRouter = () => {
 
         window.addEventListener('beforeunload', handleBeforeUnload);
 
-        // Simulamos una carga inicial para evitar redirección inmediata
         const timer = setTimeout(() => {
             setLoading(false);
         }, 1000);
@@ -30,17 +29,15 @@ const AppRouter = () => {
         };
     }, []);
 
-    // Revisamos si el token está vacío y evitamos cambios innecesarios de estado
     useEffect(() => {
         if (!token) {
-            setLoading(false); // Si no hay token, no estamos cargando
+            setLoading(false);
         }
     }, [token]);
 
     const loginUser = (userToken) => {
-        // Aquí puedes hacer la autenticación real y luego actualizar el estado de token
         setToken(userToken);
-        localStorage.setItem('token', userToken); // Guardar el token en localStorage
+        localStorage.setItem('token', userToken);
     };
 
     if (loading) {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useVehiculos from "../hooks/useVehiculos"; // Importamos el custom hook
+import useVehiculos from "../hooks/useVehiculos";
 import FormularioVehiculo from "../components/FormularioVehiculo";
 import "../styles/Vehiculos.css";
 
@@ -18,12 +18,11 @@ const Vehiculos = () => {
   const [precioMinimo, setPrecioMinimo] = useState(0);
   const [precioMaximo, setPrecioMaximo] = useState(100000);
   const [botonConfirmacion, setBotonConfirmacion] = useState(null);
-  const [mensajeConfirmacion, setMensajeConfirmacion] = useState(""); // Estado para el mensaje
-  const [formularioVisible, setFormularioVisible] = useState(false); // Mostrar/ocultar formulario
-  const [modoEdicion, setModoEdicion] = useState(false); // Indicar si es agregar o editar
-  const [vehiculoActual, setVehiculoActual] = useState(null); // Datos del vehículo para edición
+  const [mensajeConfirmacion, setMensajeConfirmacion] = useState("");
+  const [formularioVisible, setFormularioVisible] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [vehiculoActual, setVehiculoActual] = useState(null);
 
-  // Manejo de CRUD
   const handleAgregar = () => {
     setFormularioVisible(true);
     setModoEdicion(false);
@@ -40,8 +39,8 @@ const Vehiculos = () => {
     if (botonConfirmacion === id) {
       eliminarVehiculo(id);
       setBotonConfirmacion(null);
-      setMensajeConfirmacion("Vehículo eliminado exitosamente."); // Establece el mensaje
-      setTimeout(() => setMensajeConfirmacion(""), 5000); // Limpia el mensaje después de 5 segundos
+      setMensajeConfirmacion("Vehículo eliminado exitosamente.");
+      setTimeout(() => setMensajeConfirmacion(""), 5000);
     } else {
       setBotonConfirmacion(id);
       setTimeout(() => setBotonConfirmacion(null), 5000);
@@ -64,11 +63,9 @@ const Vehiculos = () => {
     }
     handleFormularioCerrar();
 
-    // Limpiar mensaje después de unos segundos
     setTimeout(() => setMensajeConfirmacion(""), 5000);
   };
 
-  // Filtros aplicados
   const vehiculosFiltrados = vehiculos.filter((vehiculo) => {
     const coincideEstado = estadoFiltro
       ? vehiculo.estadoVehiculo === estadoFiltro
@@ -81,7 +78,6 @@ const Vehiculos = () => {
   });
 
   const parseToRGB = (color) => {
-    // Elimina paréntesis y divide por comas
     const match = color.match(/\d+/g);
     if (match && match.length === 3) {
       return `rgb(${match.join(", ")})`;
@@ -167,7 +163,6 @@ const Vehiculos = () => {
           />
         </div>
       </div>
-      {/* Lista de Vehículos */}
       <div className="lista-vehiculos">
         {vehiculosFiltrados.map((vehiculo) => (
           <div key={vehiculo._id} className="vehiculo-card">

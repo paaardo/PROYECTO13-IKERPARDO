@@ -14,18 +14,15 @@ const Inicio = () => {
 
   const obtenerDatos = async () => {
     try {
-      console.log("Obteniendo datos...");
-
       const token = localStorage.getItem("token");
 
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      // Obtener vehículos
       const resVehiculos = await axios.get("http://localhost:5000/api/vehiculos", config);
 
-      // Filtrar vehículos por estadoVehiculo === "Disponible"
+      // Filtrar vehiculos por estadoVehiculo === "Disponible"
       const vehiculosDisponibles = resVehiculos.data.filter(
         (v) => v.estadoVehiculo?.toLowerCase() === "disponible"
       );
@@ -41,7 +38,6 @@ const Inicio = () => {
         setVehiculoMasBarato(null);
       }
 
-      // Obtener transacciones
       const resTransacciones = await axios.get("http://localhost:5000/api/transacciones", config);
 
       // Calcular ingresos totales
@@ -51,16 +47,13 @@ const Inicio = () => {
       }, 0);
       setTotalIngresos(ingresosTotales);
 
-      // Obtener clientes
       const resClientes = await axios.get("http://localhost:5000/api/clientes", config);
-      console.log("🔹 Clientes obtenidos:", resClientes.data);
 
-      // Buscar cliente con más compras usando el campo 'compras'
+      // Buscar cliente con más compras
       const masCompras = resClientes.data.reduce((prev, curr) => 
         (curr.compras.length > prev.compras.length ? curr : prev), resClientes.data[0]
       );
 
-      console.log("🏆 Cliente con más compras:", masCompras);
       setClienteMasCompras(masCompras && masCompras.compras.length > 0 ? masCompras : null);
 
     } catch (error) {
@@ -102,7 +95,6 @@ const Inicio = () => {
         </div>
       </div>
 
-      {/* Sección de la imagen del concesionario */}
       <div className="inicio-imagen">
         <img src="/images/concesionario.jpg" alt="Concesionario" />
       </div>

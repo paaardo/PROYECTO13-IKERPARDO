@@ -1,4 +1,3 @@
-// models/Transaccion.js
 const mongoose = require('mongoose');
 
 const transaccionSchema = new mongoose.Schema({
