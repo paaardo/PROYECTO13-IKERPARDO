@@ -28,7 +28,7 @@ const Inicio = () => {
       );
       setTotalVehiculos(vehiculosDisponibles.length);
 
-      // Obtener el vehículo más barato
+      // Obtener el vehiculo más barato
       if (vehiculosDisponibles.length > 0) {
         const masBarato = vehiculosDisponibles.reduce((prev, curr) => 
           Number(curr.precio) < Number(prev.precio) ? curr : prev
@@ -49,7 +49,7 @@ const Inicio = () => {
 
       const resClientes = await axios.get("http://localhost:5000/api/clientes", config);
 
-      // Buscar cliente con más compras
+      // Buscar cliente con mas compras
       const masCompras = resClientes.data.reduce((prev, curr) => 
         (curr.compras.length > prev.compras.length ? curr : prev), resClientes.data[0]
       );
