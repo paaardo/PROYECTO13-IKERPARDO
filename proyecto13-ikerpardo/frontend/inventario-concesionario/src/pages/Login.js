@@ -27,7 +27,7 @@ const Login = ({ loginUser }) => {
     
         try {
             if (isLoginMode) {
-                const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/api/auth/login`, {
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
                     email,
                     password,
                 });
@@ -38,7 +38,7 @@ const Login = ({ loginUser }) => {
                 loginUser(response.data.token, response.data.rol);
                 navigate('/');
             } else {
-                await axios.post(`http://${process.env.REACT_APP_API_URL}/api/auth/registrar`, {
+                await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/registrar`, {
                     nombre,
                     email,
                     password,

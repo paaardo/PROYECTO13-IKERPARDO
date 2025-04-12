@@ -10,7 +10,7 @@ const useTransacciones = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://${process.env.REACT_APP_API_URL}/api/transacciones`,
+        `${process.env.REACT_APP_API_URL}/api/transacciones`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -26,7 +26,7 @@ const useTransacciones = () => {
   const agregarTransaccion = async (nuevaTransaccion, token) => {
     try {
       const response = await axios.post(
-        `http://${process.env.REACT_APP_API_URL}/api/transacciones`,
+        `${process.env.REACT_APP_API_URL}/api/transacciones`,
         nuevaTransaccion,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -42,7 +42,7 @@ const useTransacciones = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://${process.env.REACT_APP_API_URL}/api/transacciones/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/transacciones/${id}`,
         datosActualizados,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -57,7 +57,7 @@ const useTransacciones = () => {
   const eliminarTransaccion = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://${process.env.REACT_APP_API_URL}/api/transacciones/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/transacciones/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchTransacciones();

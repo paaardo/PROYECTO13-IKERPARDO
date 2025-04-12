@@ -11,7 +11,7 @@ const useVehiculos = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://${process.env.REACT_APP_API_URL}/api/vehiculos`,
+          `${process.env.REACT_APP_API_URL}/api/vehiculos`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -31,7 +31,7 @@ const useVehiculos = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://${process.env.REACT_APP_API_URL}/api/vehiculos`,
+        `${process.env.REACT_APP_API_URL}/api/vehiculos`,
         nuevoVehiculo,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -47,7 +47,7 @@ const useVehiculos = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://${process.env.REACT_APP_API_URL}/api/vehiculos/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/vehiculos/${id}`,
         vehiculoActualizado,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -66,7 +66,7 @@ const useVehiculos = () => {
   const eliminarVehiculo = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://${process.env.REACT_APP_API_URL}/api/vehiculos/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/vehiculos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setVehiculos((prev) => prev.filter((vehiculo) => vehiculo._id !== id));
