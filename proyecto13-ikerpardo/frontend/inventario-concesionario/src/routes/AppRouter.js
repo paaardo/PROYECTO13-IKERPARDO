@@ -12,19 +12,11 @@ const AppRouter = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const handleBeforeUnload = () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('rol');
-        };
-
-        window.addEventListener('beforeunload', handleBeforeUnload);
-
         const timer = setTimeout(() => {
             setLoading(false);
-        }, 1000);
+        }, 500);
 
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
             clearTimeout(timer);
         };
     }, []);

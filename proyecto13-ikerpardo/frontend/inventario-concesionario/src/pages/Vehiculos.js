@@ -143,10 +143,16 @@ const Vehiculos = () => {
             type="range"
             id="precioMinimo"
             min="0"
-            max="100000"
+            max={precioMaximo}
             step="500"
             value={precioMinimo}
-            onChange={(e) => setPrecioMinimo(Number(e.target.value))}
+            onChange={(e) => {
+              const nuevoMin = Number(e.target.value);
+              setPrecioMinimo(nuevoMin);
+              if (nuevoMin > precioMaximo) {
+                setPrecioMaximo(nuevoMin);
+              }
+            }}
           />
 
           <label htmlFor="precioMaximo">
@@ -155,89 +161,105 @@ const Vehiculos = () => {
           <input
             type="range"
             id="precioMaximo"
-            min="0"
+            min={precioMinimo}
             max="100000"
             step="500"
             value={precioMaximo}
-            onChange={(e) => setPrecioMaximo(Number(e.target.value))}
+            onChange={(e) => {
+              const nuevoMax = Number(e.target.value);
+              setPrecioMaximo(nuevoMax);
+              if (nuevoMax < precioMinimo) {
+                setPrecioMinimo(nuevoMax);
+              }
+            }}
           />
         </div>
       </div>
       <div className="lista-vehiculos">
-        {vehiculosFiltrados.map((vehiculo) => (
-          <div key={vehiculo._id} className="vehiculo-card">
-            <img
-              src={vehiculo.imagen}
-              alt={`Imagen de ${vehiculo.marca} ${vehiculo.modelo}`}
-              className="vehiculo-imagen"
-            />
-            <div className="vehiculo-detalles">
-              <h3>
-                {vehiculo.marca} {vehiculo.modelo} ({vehiculo.ano})
-              </h3>
-              <p>
-                <strong>VIN:</strong> {vehiculo.vin}
-              </p>
-              <p>
-                <strong>Tipo:</strong> {vehiculo.tipo}
-              </p>
-              <p>
-                <strong>Kilometraje:</strong>{" "}
-                {vehiculo.kilometraje.toLocaleString()} km
-              </p>
-              <p>
-                <strong>Estado:</strong> {vehiculo.estado}
-              </p>
-              <p>
-                <strong>Precio:</strong> ${vehiculo.precio.toLocaleString()}
-              </p>
-              <p>
-                <strong>Color:</strong>
-                {vehiculo.color ? (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: "16px",
-                      height: "16px",
-                      backgroundColor: parseToRGB(vehiculo.color),
-                      border: "1px solid #ccc",
-                      borderRadius: "50%",
-                      marginLeft: "8px",
-                    }}
-                    title={vehiculo.color}
-                  ></span>
-                ) : (
-                  "No especificado"
+        {vehiculosFiltrados.length === 0 ? (
+          <p className="mensaje-sin-resultados">
+            No se han encontrado vehículos con los filtros seleccionados.
+          </p>
+        ) : (
+          vehiculosFiltrados.map((vehiculo) => (
+            <div key={vehiculo._id} className="vehiculo-card">
+              <img
+                src={vehiculo.imagen}
+                alt={`Imagen de ${vehiculo.marca} ${vehiculo.modelo}`}
+                className="vehiculo-imagen"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://d1cjrn2338s5db.cloudfront.net/gamas/images/25-467-2592-1685547326.png';
+                }}
+              />
+              <div className="vehiculo-detalles">
+                <h3>
+                  {vehiculo.marca} {vehiculo.modelo} ({vehiculo.ano})
+                </h3>
+                <p>
+                  <strong>VIN:</strong> {vehiculo.vin}
+                </p>
+                <p>
+                  <strong>Tipo:</strong> {vehiculo.tipo}
+                </p>
+                <p>
+                  <strong>Kilometraje:</strong>{" "}
+                  {vehiculo.kilometraje.toLocaleString()} km
+                </p>
+                <p>
+                  <strong>Estado:</strong> {vehiculo.estado}
+                </p>
+                <p>
+                  <strong>Precio:</strong> ${vehiculo.precio.toLocaleString()}
+                </p>
+                <p>
+                  <strong>Color:</strong>
+                  {vehiculo.color ? (
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "16px",
+                        height: "16px",
+                        backgroundColor: parseToRGB(vehiculo.color),
+                        border: "1px solid #ccc",
+                        borderRadius: "50%",
+                        marginLeft: "8px",
+                      }}
+                      title={vehiculo.color}
+                    ></span>
+                  ) : (
+                    "No especificado"
+                  )}
+                </p>
+                <p>
+                  <strong>Estado Vehículo:</strong> {vehiculo.estadoVehiculo}
+                </p>
+                <p>
+                  <strong>Fecha Adquisición:</strong>{" "}
+                  {new Date(vehiculo.fechaAdquisicion).toLocaleDateString()}
+                </p>
+                {rol === "admin" && (
+                  <div className="acciones">
+                    <button
+                      className="btn-editar"
+                      onClick={() => handleEditar(vehiculo)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => handleEliminar(vehiculo._id)}
+                    >
+                      {botonConfirmacion === vehiculo._id
+                        ? "¿Seguro?"
+                        : "Eliminar"}
+                    </button>
+                  </div>
                 )}
-              </p>
-              <p>
-                <strong>Estado Vehículo:</strong> {vehiculo.estadoVehiculo}
-              </p>
-              <p>
-                <strong>Fecha Adquisición:</strong>{" "}
-                {new Date(vehiculo.fechaAdquisicion).toLocaleDateString()}
-              </p>
-              {rol === "admin" && (
-                <div className="acciones">
-                  <button
-                    className="btn-editar"
-                    onClick={() => handleEditar(vehiculo)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => handleEliminar(vehiculo._id)}
-                  >
-                    {botonConfirmacion === vehiculo._id
-                      ? "¿Seguro?"
-                      : "Eliminar"}
-                  </button>
-                </div>
-              )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

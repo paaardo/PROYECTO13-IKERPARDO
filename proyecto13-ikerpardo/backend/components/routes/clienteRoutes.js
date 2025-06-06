@@ -18,4 +18,10 @@ router.put('/:id', verificarToken, verificarRol('admin'), clienteController.actu
 // Ruta para eliminar un cliente
 router.delete('/:id', verificarToken, verificarRol('admin'), clienteController.eliminarCliente);
 
+// Reservar un vehiculo (solo usuarios)
+router.post('/reservar/:vehiculoId', verificarToken, verificarRol('usuario'), clienteController.reservarVehiculo);
+
+// Cancelar reserva (solo usuarios)
+router.post('/cancelar-reserva', verificarToken, verificarRol('usuario'), clienteController.cancelarReserva);
+
 module.exports = router;

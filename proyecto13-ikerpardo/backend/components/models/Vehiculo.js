@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const vehiculoSchema = new mongoose.Schema({
-  vin: { type: String, required: true, unique: true },            // Número de identificación del vehiculo
+  vin: { type: String, required: true, unique: true },            // Número de identificacion del vehiculo
   marca: { type: String, required: true },                        // Marca
   modelo: { type: String, required: true },                       // Modelo
   tipo: { type: String, required: true },                         // Tipo de vehiculo

@@ -22,12 +22,13 @@ const FormularioTransaccion = ({
   const [vehiculoSeleccionado, setVehiculoSeleccionado] = useState(null);
   const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
   const [total, setTotal] = useState("");
+  const [mensajeError, setMensajeError] = useState(null);
 
   useEffect(() => {
     const fetchClientes = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/clientes`, {
+        const response = await axios.get(`http://localhost:5000/api/clientes`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setClientes(response.data);
@@ -79,16 +80,35 @@ const FormularioTransaccion = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!clienteSeleccionado || !vehiculoSeleccionado || !fecha || !total) {
-      onClose("Todos los campos son obligatorios.");
+      setMensajeError("Todos los campos son obligatorios.");
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
 
+      const fechaAdquisicion = vehiculoSeleccionado.fechaAdquisicion;
+
+      if (!fechaAdquisicion) {
+        onClose("No se encontró la fecha de adquisición del vehículo.");
+        return;
+      }
+
+      const fechaTransaccionDate = new Date(fecha);
+      const fechaAdquisicionDate = new Date(fechaAdquisicion);
+
+      if (fechaTransaccionDate < fechaAdquisicionDate) {
+        setMensajeError(
+          `La fecha de transacción no puede ser anterior a la fecha de adquisición del vehículo (${
+            fechaAdquisicion.split("T")[0]
+          }).`
+        );
+        return;
+      }
+
       if (transaccion) {
         await axios.put(
-          `${process.env.REACT_APP_API_URL}/api/transacciones/${transaccion._id}`,
+          `http://localhost:5000/api/transacciones/${transaccion._id}`,
           {
             cliente: clienteSeleccionado._id,
             vehiculo: vehiculoSeleccionado._id,
@@ -112,6 +132,7 @@ const FormularioTransaccion = ({
       }
 
       onTransaccionAgregada();
+      setMensajeError(null);
       limpiarFormulario();
     } catch (err) {
       onClose("Error al guardar la transacción.");
@@ -119,20 +140,18 @@ const FormularioTransaccion = ({
   };
 
   const handleFechaChange = (e) => {
-    const fechaIngresada = e.target.value;
-    const fechaActual = new Date().toISOString().split("T")[0];
-
-    if (fechaIngresada < fechaActual) {
-      setFecha(fechaActual);
-    } else {
-      setFecha(fechaIngresada);
-    }
+    setFecha(e.target.value);
   };
 
   return (
+    <div className="contenedor-formulario-transaccion">
     <div className="formulario-transaccion">
-      <h2>{transaccion ? "Editar Transacción" : "Agregar Nueva Transacción"}</h2>
-
+      <h2>
+        {transaccion ? "Editar Transacción" : "Agregar Nueva Transacción"}
+      </h2>
+      {mensajeError && (
+        <p style={{ color: "red", marginTop: "10px" }}>{mensajeError}</p>
+      )}
       <div className="formulario-contenido-transaccion">
         <div className="clientes-lista-transaccion">
           <h3>Seleccionar Cliente</h3>
@@ -153,7 +172,11 @@ const FormularioTransaccion = ({
                   <tr
                     key={cliente._id}
                     onClick={() => seleccionarCliente(cliente)}
-                    className={clienteSeleccionado?._id === cliente._id ? "seleccionado" : ""}
+                    className={
+                      clienteSeleccionado?._id === cliente._id
+                        ? "seleccionado"
+                        : ""
+                    }
                   >
                     <td>{cliente.nombre}</td>
                     <td>{cliente.apellido}</td>
@@ -176,7 +199,9 @@ const FormularioTransaccion = ({
                 <div
                   key={vehiculo._id}
                   className={`vehiculo-card-transaccion ${
-                    vehiculoSeleccionado?._id === vehiculo._id ? "seleccionado" : ""
+                    vehiculoSeleccionado?._id === vehiculo._id
+                      ? "seleccionado"
+                      : ""
                   }`}
                   onClick={() => seleccionarVehiculo(vehiculo)}
                   style={
@@ -185,7 +210,15 @@ const FormularioTransaccion = ({
                       : {}
                   }
                 >
-                  <img src={vehiculo.imagen} alt={`${vehiculo.marca} ${vehiculo.modelo}`} />
+                  <img
+                    src={vehiculo.imagen}
+                    alt={`${vehiculo.marca} ${vehiculo.modelo}`}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://d1cjrn2338s5db.cloudfront.net/gamas/images/25-467-2592-1685547326.png";
+                    }}
+                  />
                   <p>
                     {vehiculo.marca} {vehiculo.modelo} ({vehiculo.ano})
                   </p>
@@ -218,17 +251,23 @@ const FormularioTransaccion = ({
           <button onClick={handleSubmit} className="btn-guardar-transaccion">
             {transaccion ? "Guardar Cambios" : "Agregar"}
           </button>
-          <button onClick={limpiarFormulario} className="btn-limpiar-transaccion">
+          <button
+            onClick={limpiarFormulario}
+            className="btn-limpiar-transaccion"
+          >
             Limpiar
           </button>
-          <button onClick={() => onClose(null)} className="btn-cancelar-transaccion">
+          <button
+            onClick={() => onClose(null)}
+            className="btn-cancelar-transaccion"
+          >
             Cancelar
           </button>
         </div>
       </div>
     </div>
+    </div>
   );
 };
 
 export default FormularioTransaccion;
-

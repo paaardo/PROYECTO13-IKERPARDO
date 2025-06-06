@@ -1,4 +1,5 @@
 const Cliente = require('../models/Cliente');
+const Vehiculo = require('../models/Vehiculo');
 
 // Crear un nuevo cliente
 exports.crearCliente = async (req, res) => {
@@ -60,5 +61,56 @@ exports.eliminarCliente = async (req, res) => {
         res.json({ mensaje: "Cliente eliminado correctamente" });
     } catch (error) {
         res.status(500).json({ mensaje: "Error al eliminar el cliente", error });
+    }
+};
+
+// Se añade para que se pueda reservar y cancelar un vehiculo desde el login de un usuario
+// Reservar un vehiculo (usuario puede tener solo uno reservado)
+exports.reservarVehiculo = async (req, res) => {
+    try {
+        const usuario = await Usuario.findById(req.usuario.id);
+        if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+        if (usuario.reservado) {
+            return res.status(400).json({ mensaje: 'Ya tienes un coche reservado' });
+        }
+
+        const vehiculo = await Vehiculo.findById(req.params.vehiculoId);
+        if (!vehiculo || vehiculo.estadoVehiculo !== 'Disponible') {
+            return res.status(400).json({ mensaje: 'El vehículo no está disponible para reservar' });
+        }
+
+        vehiculo.estadoVehiculo = 'Reservado';
+        await vehiculo.save();
+
+        usuario.reservado = vehiculo._id;
+        await usuario.save();
+
+        res.json({ mensaje: 'Vehículo reservado correctamente', vehiculo });
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error al reservar el vehículo', error });
+    }
+};
+
+// Cancelar la reserva de un vehiculo
+exports.cancelarReserva = async (req, res) => {
+    try {
+        const usuario = await Usuario.findById(req.usuario.id);
+        if (!usuario || !usuario.reservado) {
+            return res.status(400).json({ mensaje: 'No tienes ninguna reserva activa' });
+        }
+
+        const vehiculo = await Vehiculo.findById(usuario.reservado);
+        if (vehiculo) {
+            vehiculo.estadoVehiculo = 'Disponible';
+            await vehiculo.save();
+        }
+
+        usuario.reservado = null;
+        await usuario.save();
+
+        res.json({ mensaje: 'Reserva cancelada correctamente', vehiculo });
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error al cancelar la reserva', error });
     }
 };

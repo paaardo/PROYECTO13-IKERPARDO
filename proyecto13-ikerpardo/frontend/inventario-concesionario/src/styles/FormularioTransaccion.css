@@ -1,3 +1,13 @@
+.contenedor-formulario-transaccion {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1000px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
 .formulario-transaccion {
     display: flex;
     flex-direction: column;
@@ -5,7 +15,6 @@
     background: #f9f9f9;
     padding: 20px;
     border-radius: 10px;
-    margin-top: 20px;
 }
 
 .formulario-contenido-transaccion {
@@ -155,3 +164,8 @@
     background-color: #a3d5ff !important;
 }
 
+@media (max-width: 768px) {
+  .contenedor-formulario-transaccion {
+    padding: 15px;
+  }
+}
