@@ -75,6 +75,56 @@ const useVehiculos = () => {
     }
   };
 
+  const reservarVehiculo = async (vehiculoId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:5000/api/clientes/reservar/${vehiculoId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setVehiculos((prev) =>
+        prev.map((vehiculo) =>
+          vehiculo._id === vehiculoId
+            ? { ...vehiculo, estadoVehiculo: "Reservado" }
+            : vehiculo
+        )
+      );
+      return response.data;
+    } catch (err) {
+      console.error("Error al reservar el vehículo", err);
+      throw err;
+    }
+  };
+
+  const cancelarReserva = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `http://localhost:5000/api/clientes/cancelar-reserva`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const vehiculoCancelado = response.data.vehiculoCancelado;
+
+    if (vehiculoCancelado && vehiculoCancelado._id) {
+      setVehiculos((prev) =>
+        prev.map((vehiculo) =>
+          vehiculo._id === vehiculoCancelado._id
+            ? { ...vehiculo, estadoVehiculo: "Disponible" }
+            : vehiculo
+        )
+      );
+    }
+
+    return response.data;
+  } catch (err) {
+    console.error("Error al cancelar la reserva", err);
+    throw err;
+  }
+};
+
   return {
     vehiculos,
     loading,
@@ -82,6 +132,8 @@ const useVehiculos = () => {
     agregarVehiculo,
     editarVehiculo,
     eliminarVehiculo,
+    reservarVehiculo,
+    cancelarReserva,
   };
 };
 

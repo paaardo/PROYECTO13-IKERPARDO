@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import useVehiculos from "../hooks/useVehiculos";
 import FormularioVehiculo from "../components/FormularioVehiculo";
 import "../styles/Vehiculos.css";
@@ -11,6 +12,8 @@ const Vehiculos = () => {
     agregarVehiculo,
     editarVehiculo,
     eliminarVehiculo,
+    reservarVehiculo,
+    cancelarReserva,
   } = useVehiculos();
 
   const [estadoFiltro, setEstadoFiltro] = useState("");
@@ -22,6 +25,14 @@ const Vehiculos = () => {
   const [formularioVisible, setFormularioVisible] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [vehiculoActual, setVehiculoActual] = useState(null);
+  const [vehiculoReservadoId, setVehiculoReservadoId] = useState(null);
+
+  useEffect(() => {
+    const reservaGuardada = localStorage.getItem("vehiculoReservadoId");
+    if (reservaGuardada) {
+      setVehiculoReservadoId(reservaGuardada);
+    }
+  }, []);
 
   const handleAgregar = () => {
     setFormularioVisible(true);
@@ -44,6 +55,32 @@ const Vehiculos = () => {
     } else {
       setBotonConfirmacion(id);
       setTimeout(() => setBotonConfirmacion(null), 5000);
+    }
+  };
+
+  const handleReservar = async (vehiculoId) => {
+    try {
+      await reservarVehiculo(vehiculoId);
+      setVehiculoReservadoId(vehiculoId);
+      localStorage.setItem("vehiculoReservadoId", vehiculoId);
+      setMensajeConfirmacion("¡Coche reservado correctamente!");
+      setTimeout(() => setMensajeConfirmacion(""), 5000);
+    } catch (error) {
+      setMensajeConfirmacion("Error al reservar el vehículo.");
+      setTimeout(() => setMensajeConfirmacion(""), 5000);
+    }
+  };
+
+  const handleCancelarReserva = async () => {
+    try {
+      await cancelarReserva();
+      setVehiculoReservadoId(null);
+      localStorage.removeItem("vehiculoReservadoId");
+      setMensajeConfirmacion("Reserva cancelada.");
+      setTimeout(() => setMensajeConfirmacion(""), 5000);
+    } catch (error) {
+      setMensajeConfirmacion("Error al cancelar la reserva.");
+      setTimeout(() => setMensajeConfirmacion(""), 5000);
     }
   };
 
@@ -189,7 +226,8 @@ const Vehiculos = () => {
                 className="vehiculo-imagen"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://d1cjrn2338s5db.cloudfront.net/gamas/images/25-467-2592-1685547326.png';
+                  e.target.src =
+                    "https://d1cjrn2338s5db.cloudfront.net/gamas/images/25-467-2592-1685547326.png";
                 }}
               />
               <div className="vehiculo-detalles">
@@ -238,24 +276,60 @@ const Vehiculos = () => {
                   <strong>Fecha Adquisición:</strong>{" "}
                   {new Date(vehiculo.fechaAdquisicion).toLocaleDateString()}
                 </p>
-                {rol === "admin" && (
-                  <div className="acciones">
-                    <button
-                      className="btn-editar"
-                      onClick={() => handleEditar(vehiculo)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="btn-eliminar"
-                      onClick={() => handleEliminar(vehiculo._id)}
-                    >
-                      {botonConfirmacion === vehiculo._id
-                        ? "¿Seguro?"
-                        : "Eliminar"}
-                    </button>
-                  </div>
-                )}
+                <div className="acciones-vehiculos">
+                  {rol === "admin" ? (
+                    <>
+                      <button
+                        className="btn-editar"
+                        onClick={() => handleEditar(vehiculo)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => handleEliminar(vehiculo._id)}
+                      >
+                        {botonConfirmacion === vehiculo._id
+                          ? "¿Seguro?"
+                          : "Eliminar"}
+                      </button>
+                    </>
+                  ) : vehiculoReservadoId === vehiculo._id ? (
+                    <>
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => {
+                          if (botonConfirmacion === vehiculo._id) {
+                            handleCancelarReserva();
+                            setBotonConfirmacion(null);
+                          } else {
+                            setBotonConfirmacion(vehiculo._id);
+                            setTimeout(() => {
+                              setBotonConfirmacion(null);
+                            }, 5000);
+                          }
+                        }}
+                      >
+                        {botonConfirmacion === vehiculo._id
+                          ? "¿Seguro?"
+                          : "Cancelar Reserva"}
+                      </button>
+                      <button className="btn-reservado">
+                        ¡Coche Reservado!
+                      </button>
+                    </>
+                  ) : vehiculo.estadoVehiculo === "Disponible" &&
+                    !vehiculoReservadoId ? (
+                    <>
+                      <button
+                        className="btn-eliminar"
+                        onClick={() => handleReservar(vehiculo._id)}
+                      >
+                        Reservar
+                      </button>
+                    </>
+                  ) : null}
+                </div>
               </div>
             </div>
           ))

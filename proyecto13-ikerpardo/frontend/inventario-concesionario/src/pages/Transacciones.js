@@ -179,7 +179,7 @@ const Transacciones = () => {
               <td>{transaccion.vehiculo?.estado}</td>
               <td>{new Date(transaccion.fecha).toLocaleDateString()}</td>
               <td>${transaccion.total.toLocaleString()}</td>
-              <td className="acciones">
+              <td className="acciones-transacciones">
                 <button
                   className="btn-editar"
                   onClick={() => handleEditar(transaccion)}

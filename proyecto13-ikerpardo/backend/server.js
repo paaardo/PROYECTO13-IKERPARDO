@@ -11,7 +11,7 @@ const { verificarToken, verificarRol } = require('./components/middleware/authMi
 const app = express();
 
 app.use(cors({
-    origin: '*', // O limita a tu dominio de Vercel: 'https://tusitio.vercel.app'
+    origin: '*',
     credentials: true
   }));
 app.use(express.json());
