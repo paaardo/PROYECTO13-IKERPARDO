@@ -24,7 +24,7 @@ Entre los puntos fuertes del proyecto destacan:
 
 --LINKS DE DESPLIEGUE--
 
-Frontend en Vercel: proyecto-13-ikerpardo-4qxlgfkn2-paaardos-projects.vercel.app
+Frontend en Vercel: https://proyecto-13-ikerpardo.vercel.app
 
 Backend en Render: https://proyecto13-ikerpardo.onrender.com
 
