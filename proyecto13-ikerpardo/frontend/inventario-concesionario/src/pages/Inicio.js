@@ -20,7 +20,7 @@ const Inicio = () => {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      const resVehiculos = await axios.get(`http://localhost:5000/api/vehiculos`, config);
+      const resVehiculos = await axios.get(`${process.env.REACT_APP_API_URL}/api/vehiculos`, config);
 
       // Filtrar vehiculos por estadoVehiculo === "Disponible"
       const vehiculosDisponibles = resVehiculos.data.filter(
@@ -38,7 +38,7 @@ const Inicio = () => {
         setVehiculoMasBarato(null);
       }
 
-      const resTransacciones = await axios.get(`http://localhost:5000/api/transacciones`, config);
+      const resTransacciones = await axios.get(`${process.env.REACT_APP_API_URL}/api/transacciones`, config);
 
       // Calcular ingresos totales
       const ingresosTotales = resTransacciones.data.reduce((sum, t) => {
@@ -47,7 +47,7 @@ const Inicio = () => {
       }, 0);
       setTotalIngresos(ingresosTotales);
 
-      const resClientes = await axios.get(`http://localhost:5000/api/clientes`, config);
+      const resClientes = await axios.get(`${process.env.REACT_APP_API_URL}/api/clientes`, config);
 
       // Buscar cliente con mas compras
       const masCompras = resClientes.data.reduce((prev, curr) => 

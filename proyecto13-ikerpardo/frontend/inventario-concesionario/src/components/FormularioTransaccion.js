@@ -28,7 +28,7 @@ const FormularioTransaccion = ({
     const fetchClientes = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`http://localhost:5000/api/clientes`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/clientes`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setClientes(response.data);
@@ -108,7 +108,7 @@ const FormularioTransaccion = ({
 
       if (transaccion) {
         await axios.put(
-          `http://localhost:5000/api/transacciones/${transaccion._id}`,
+          `${process.env.REACT_APP_API_URL}/api/transacciones/${transaccion._id}`,
           {
             cliente: clienteSeleccionado._id,
             vehiculo: vehiculoSeleccionado._id,
