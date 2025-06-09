@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import Navbar from '../components/Navbar';
 import Inicio from '../pages/Inicio';
 import Vehiculos from '../pages/Vehiculos';
@@ -11,7 +12,31 @@ const AppRouter = () => {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
 
+    // ✅ Validar expiración del token
     useEffect(() => {
+        const verificarToken = () => {
+            try {
+                if (token) {
+                    const decoded = jwtDecode(token);
+                    const ahora = Date.now() / 1000;
+
+                    if (decoded.exp < ahora) {
+                        // Token expirado
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('rol');
+                        setToken(null);
+                        return;
+                    }
+                }
+            } catch (error) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('rol');
+                setToken(null);
+            }
+        };
+
+        verificarToken();
+
         const timer = setTimeout(() => {
             setLoading(false);
         }, 500);
@@ -19,12 +44,6 @@ const AppRouter = () => {
         return () => {
             clearTimeout(timer);
         };
-    }, []);
-
-    useEffect(() => {
-        if (!token) {
-            setLoading(false);
-        }
     }, [token]);
 
     const loginUser = (userToken) => {
