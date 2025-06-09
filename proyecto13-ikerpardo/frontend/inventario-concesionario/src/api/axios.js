@@ -7,7 +7,6 @@ const instance = axios.create({
     },
 });
 
-// ✅ Interceptar respuestas 401
 instance.interceptors.response.use(
     response => response,
     error => {

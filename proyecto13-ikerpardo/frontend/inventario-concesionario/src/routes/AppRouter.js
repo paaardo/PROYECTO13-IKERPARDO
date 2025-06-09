@@ -12,7 +12,6 @@ const AppRouter = () => {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
 
-    // ✅ Validar expiración del token
     useEffect(() => {
         const verificarToken = () => {
             try {
@@ -21,7 +20,6 @@ const AppRouter = () => {
                     const ahora = Date.now() / 1000;
 
                     if (decoded.exp < ahora) {
-                        // Token expirado
                         localStorage.removeItem('token');
                         localStorage.removeItem('rol');
                         setToken(null);
